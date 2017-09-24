@@ -1,16 +1,12 @@
-" TODO expand this to work on multiple files better
-" :sign place {id} line={lnum} name={name} file={fname}
-"
-" <plug> ?
-
 highlight Breakpoint ctermfg=Red
 
 sign define breakpoint text=* texthl=Breakpoint
 
 " This is so my sign numbering (hopefully) doesn't collide
 " with some other plugin
-let s:counterOffset = 3000
+let s:counterOffset = 2000
 let g:counter = s:counterOffset + 1
+
 let g:breakpoints = []
 
 " retuns a string containing the name of the breakpoint file
@@ -22,22 +18,23 @@ function! s:breakpointFilename()
 endfunction
 
 
-" TODO check that lnum shouldn't be larger than the amount of lines in the
-" file
-" place([line]):
-" adds breakpoint at `line' or at current line
+" Places a breakpoint mark. Either at the current line at the number
+" defined by the first argument.
+" Return 1 if attempting to place outside valid range.
+" Return 2 if a breakpoint already exists at that line
+" Return 0 if successfully placed
 function! breakpoint#place(...)
 	let l:lnum = a:0 == 1 ? a:1 : line(".")
 	" can't place breakpoint outside file
 	if l:lnum > line("$") || l:lnum < 1
-		return
+		return 1
 	endif
 	let l:fname = expand("%:p")
 
 	" Make sure that no duplicate breakpoints exists in file
 	for [n, _, file] in g:breakpoints
 		if n == l:lnum && l:fname == file
-			return
+			return 2
 		endif
 	endfor
 
@@ -48,6 +45,7 @@ function! breakpoint#place(...)
 
 	let g:breakpoints += [[l:lnum, g:counter, l:fname]]
 	let g:counter += 1
+	return 0
 endfunction
 
 " Remove the breakpoint at the cursors current line
@@ -82,6 +80,9 @@ endfunction
 
 " saves to file if breakpoints are set
 " deletes the file if no breakpoints exist
+"
+" Errors if trying to save breakpoints where it isn't allowed to.
+" This is good.
 function! breakpoint#save()
 	let l:fname = expand("%:p")
 	let l:lines = []
@@ -96,21 +97,32 @@ function! breakpoint#save()
 	else
 		call writefile(l:lines, s:breakpointFilename())
 	endif
+
+	echom "Saved Breakpoints"
+	return 0
 endfunction
 
-" This just dosn't do anything if there is no breakpoint file
+" returns a -1 if file can't be read
+" otherwise return number of breakpoints loaded
 function! breakpoint#load()
+	let l:fname = s:breakpointFilename()
+	if !filereadable(l:fname)
+		return -1
+	endif
+
+	let l:count = 0
 	for breakinfo in readfile(s:breakpointFilename())
 		let l:line = split(breakinfo, ":")[1]
 		call breakpoint#place(l:line)
+		let l:count += 1
 	endfor
+	return l:count
 endfunction
 
-" TODO auto group?
-" This also doesn't seem to work
-autocmd FileReadPost * call breakpoint#load()
-autocmd FileWritePre * call Breakpoint#save()
+" TODO is this the best autocmd patters
+augroup breakpoint
+	autocmd BufNewFile,BufRead * :call breakpoint#load()
+	autocmd BufWritePre,FileWritePre * :call breakpoint#save()
+augroup END
 
-"nnoremap <leader>e :call breakpoint#place()<cr>
-"nnoremap <leader>b :call breakpoint#remove()<cr>
 nnoremap <leader>a :call breakpoint#toggle()<cr>
