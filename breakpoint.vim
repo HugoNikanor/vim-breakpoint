@@ -50,21 +50,6 @@ function! breakpoint#place(...)
 	let g:counter += 1
 endfunction
 
-" TODO possibly merge the two delete functions into one
-function! s:removeByCounter(cpos)
-	let l:index = 0
-	for [_, counter, fname] in g:breakpoints
-		if counter == cpos
-			execute printf(":sign unplace %d file=%s",
-						\ cpos,
-						\ l:fname)
-			unlet g:breakpoints[l:index]
-			break
-		endif
-		let l:index += 1
-	endfor
-endfunction
-
 " Remove the breakpoint at the cursors current line
 " returns 1 if breakpoint was removed, 0 otherwise
 function! breakpoint#remove()
