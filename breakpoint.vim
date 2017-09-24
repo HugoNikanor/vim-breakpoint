@@ -1,16 +1,26 @@
 " TODO expand this to work on multiple files better
 " :sign place {id} line={lnum} name={name} file={fname}
+"
+" <plug> ?
 
 highlight Breakpoint ctermfg=Red
 
 sign define breakpoint text=* texthl=Breakpoint
-
 
 " This is so my sign numbering (hopefully) doesn't collide
 " with some other plugin
 let s:counterOffset = 3000
 let g:counter = s:counterOffset + 1
 let g:breakpoints = []
+
+" retuns a string containing the name of the breakpoint file
+" for the file currently selected
+function! s:breakpointFilename()
+	let l:dirname = expand("%:h")
+	let l:filename = expand("%:t")
+	return l:dirname . "/.breakpoints_" . l:filename
+endfunction
+
 
 " TODO check that lnum shouldn't be larger than the amount of lines in the
 " file
@@ -31,9 +41,9 @@ function! breakpoint#place(...)
 		endif
 	endfor
 
-	execute printf(":sign place %d line=%d name=breakpoint file=%s", 
-				\ g:counter, 
-				\ l:lnum, 
+	execute printf(":sign place %d line=%d name=breakpoint file=%s",
+				\ g:counter,
+				\ l:lnum,
 				\ l:fname)
 
 	let g:breakpoints += [[l:lnum, g:counter, l:fname]]
@@ -56,6 +66,7 @@ function! s:removeByCounter(cpos)
 endfunction
 
 " Remove the breakpoint at the cursors current line
+" returns 1 if breakpoint was removed, 0 otherwise
 function! breakpoint#remove()
 	let l:lnum = line(".")
 	let l:fname = expand("%:p")
@@ -70,40 +81,40 @@ function! breakpoint#remove()
 						\ cpos,
 						\ l:fname)
 			unlet g:breakpoints[l:index]
-			break
+			"break
+			return 1
 		endif
 		let l:index += 1
 	endfor
-
-	echo l:index
-
-	unlet g:breakpoints[l:index]
-
+	return 0
 endfunction
 
-" retuns a string containing the name of the breakpoint file
-" for the file currently selected
-function! s:breakpointFilename()
-	let l:dirname = expand("%:h")
-	let l:filename = expand("%:t")
-	return l:dirname . "/.breakpoints_" . l:filename
+function! breakpoint#toggle()
+	if !breakpoint#remove()
+		call breakpoint#place()
+	endif
 endfunction
 
+" saves to file if breakpoints are set
+" deletes the file if no breakpoints exist
 function! breakpoint#save()
 	let l:fname = expand("%:p")
 	let l:lines = []
 	for [line, _, file] in g:breakpoints
 		if l:fname == file
-			let l:lines += ["break " . l:fname . ":" . line]
+			let l:lines += [printf("break %s:%d", l:fname, line)]
 		endif
 	endfor
-	" add "a" as a final argument to append instead of overwrite
-	call writefile(l:lines, s:breakpointFilename())
+
+	if (empty(l:lines))
+		call delete(s:breakpointFilename())
+	else
+		call writefile(l:lines, s:breakpointFilename())
+	endif
 endfunction
 
+" This just dosn't do anything if there is no breakpoint file
 function! breakpoint#load()
-	"let l:fname = expand("%:p")
-	"let l:lines = 
 	for breakinfo in readfile(s:breakpointFilename())
 		let l:line = split(breakinfo, ":")[1]
 		call breakpoint#place(l:line)
@@ -115,5 +126,6 @@ endfunction
 autocmd FileReadPost * call breakpoint#load()
 autocmd FileWritePre * call Breakpoint#save()
 
-nnoremap <leader>a :call breakpoint#place()<cr>
-nnoremap <leader>b :call breakpoint#remove()<cr>
+"nnoremap <leader>e :call breakpoint#place()<cr>
+"nnoremap <leader>b :call breakpoint#remove()<cr>
+nnoremap <leader>a :call breakpoint#toggle()<cr>
