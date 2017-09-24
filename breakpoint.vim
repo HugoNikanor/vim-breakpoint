@@ -96,9 +96,9 @@ function! breakpoint#save()
 		call delete(s:breakpointFilename())
 	else
 		call writefile(l:lines, s:breakpointFilename())
+		echom "Saved Breakpoints"
 	endif
 
-	echom "Saved Breakpoints"
 	return 0
 endfunction
 
