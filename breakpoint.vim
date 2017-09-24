@@ -94,7 +94,7 @@ function! breakpoint#save()
 	let l:lines = []
 	for [line, _, file] in g:breakpoints
 		if l:fname == file
-			let l:lines += [line]
+			let l:lines += ["break " . l:fname . ":" . line]
 		endif
 	endfor
 	" add "a" as a final argument to append instead of overwrite
@@ -104,12 +104,14 @@ endfunction
 function! breakpoint#load()
 	"let l:fname = expand("%:p")
 	"let l:lines = 
-	for line in readfile(s:breakpointFilename())
-		call breakpoint#place(line)
+	for breakinfo in readfile(s:breakpointFilename())
+		let l:line = split(breakinfo, ":")[1]
+		call breakpoint#place(l:line)
 	endfor
 endfunction
 
 " TODO auto group?
+" This also doesn't seem to work
 autocmd FileReadPost * call breakpoint#load()
 autocmd FileWritePre * call Breakpoint#save()
 
