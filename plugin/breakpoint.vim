@@ -125,4 +125,4 @@ augroup breakpoint
 	autocmd BufWritePre,FileWritePre * :call breakpoint#save()
 augroup END
 
-nnoremap <leader>a :call breakpoint#toggle()<cr>
+nnoremap <leader>a :silent call breakpoint#toggle()<cr>
