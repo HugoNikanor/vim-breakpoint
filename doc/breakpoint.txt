@@ -1,0 +1,105 @@
+*breakpoint.txt*                                        Last change: 2017-09-25
+*breakpoint*
+
+              _                    _                _       _   ~
+             | |__  _ __ ___  __ _| | ___ __   ___ (_)_ __ | |_ ~
+             | '_ \| '__/ _ \/ _` | |/ / '_ \ / _ \| | '_ \| __|~
+         vim-| |_) | | |  __/ (_| |   <| |_) | (_) | | | | | |_ ~
+             |_.__/|_|  \___|\__,_|_|\_\ .__/ \___/|_|_| |_|\__|~
+                                       |_|                      ~
+
+Plugin for placing visually placing breakpoints in a vim file. Currently only
+supports GDB.
+
+CONTENTS                                                   *BreakpointContents*
+
+1. General ................................................ |Breakpoint|
+2. Vim Usage .............................................. |BreakpointVim|
+3. GDB Usage .............................................. |BreakpointGDB|
+4. Configuration .......................................... |BreakpointConfig|
+5. Contributing ........................................... |BreakpointContrib|
+6. Credits & Licence ...................................... |BreakpointCredits|
+
+=============================================================================
+1: General                                                         *Breakpoint*
+
+This plugin allows you to place breakpoints in Vim. These can later be
+sourced by GDB.
+
+If there exists a file named `.breakpoints_<filename>` in the same directory
+as <file> then Vim loads breakpoint data from that file. If any breakpoints
+are set when Vim saves then those are saved to that file. If there are no
+breakpoints in the file during a save then the breakpoints file is removed.
+
+The breakpoints file is also formatted as a GDB breakpoints file, allowing GDB
+to source it. As well as any GDB breakpoint file to be used for
+vim-breakpoint.
+
+Primary distribution and latest version of this plugin should be available at:
+    https://github.com/HugoNikanor/vim-breakpoint
+
+=============================================================================
+2: Vim Usage                                                    *BreakpointVim*
+
+Bindings:
+
+<leader>a                           toggles breakpoint on current line
+
+----------------------------------------------------------------------
+Functions:
+
+The following functions are available from vim-breakpoint.
+
+`breakpoint#place([line])          ` Places a breakpoint, ether at the
+                                   current line, or at the line given
+                                   by {line}.
+
+`breakpoint#remove()`                Removes the breakpoint at current line
+
+`breakpoint#toggle()`                Toggles the breakpoint at current line
+
+`breakpoint#save()`                  Saves all breakpoints in current file
+                                   to `.breakpoints_<file>` 
+
+`breakpoint#load()`                  Loads all breakpoints from
+                                   `.breakpoints_<file>` into Vim.
+
+
+
+=============================================================================
+3: GDB Usage                                                    *BreakpointGDB*
+
+Vim-breakpoint saves its breakpoints to a file called `.breakpoints_<file>`.
+GDB can then source that file, by running (in gdb):
+>
+    (gdb) source .breakpoints_<file>
+
+=============================================================================
+4: Configuration                                             *BreakpointConfig*
+
+Plugin configuration is done in `~/.vim/ftplugin/breakpoint.vim`.
+It's possible to change both color and shape.
+
+Example: >
+    highlight Breakpoint ctermfg=Yellow
+    sign define breakpoint text=<> texthl=Breakpoint
+<
+Where the ctermfg=Yellow can be changed for a different color, and the text=<>
+can be changed for a different symbol. See |:sign| for more information.
+=============================================================================
+5: Contributing                                             *BreakpointContrib*
+
+Github pull requests at https://github.com/HugoNikanor/vim-breakpoint, which
+is also where you should have downloaded this plugin from.
+
+=============================================================================
+6: Credits & Licence                                        *BreakpointCredits*
+
+Author and maintainer:
+    Hugo Hörnquist (hugo @ hornquist.se) (GitHub: HugoNikanor)
+
+Licences under WTFPL (http://www.wtfpl.net/txt/copying)
+
+2017-09-24
+
+ vim:tw=78:ts=4:ft=help:norl:

@@ -1,0 +1,9 @@
+Breakpoint	breakpoint.txt	/*Breakpoint*
+BreakpointConfig	breakpoint.txt	/*BreakpointConfig*
+BreakpointContents	breakpoint.txt	/*BreakpointContents*
+BreakpointContrib	breakpoint.txt	/*BreakpointContrib*
+BreakpointCredits	breakpoint.txt	/*BreakpointCredits*
+BreakpointGDB	breakpoint.txt	/*BreakpointGDB*
+BreakpointVim	breakpoint.txt	/*BreakpointVim*
+breakpoint	breakpoint.txt	/*breakpoint*
+breakpoint.txt	breakpoint.txt	/*breakpoint.txt*
