@@ -17,8 +17,10 @@ CONTENTS                                                   *BreakpointContents*
 2. Vim Usage .............................................. |BreakpointVim|
 3. GDB Usage .............................................. |BreakpointGDB|
 4. Configuration .......................................... |BreakpointConfig|
-5. Contributing ........................................... |BreakpointContrib|
-6. Credits & Licence ...................................... |BreakpointCredits|
+5. Troubleshooting ........................................ |BreakpointTrouble|
+6. Known Bugs ............................................. |BreakpointBug|
+7. Contributing ........................................... |BreakpointContrib|
+8. Credits & Licence ...................................... |BreakpointCredits|
 
 =============================================================================
 1: General                                                         *Breakpoint*
@@ -46,9 +48,25 @@ Bindings:
 <leader>a                           toggles breakpoint on current line
 
 ----------------------------------------------------------------------
+Commands:
+
+The following commands are available:
+
+`BreakpointPlace  [line]`           Place, remove, or toggle breakpoint.
+`BreakpointRemove [line]`           Either on {line} or on current line,
+`BreakpointToggle [line]`           if no argument was given.
+
+`BreakpointSave`                    Loads and saves the breakpoints in
+`BreakpointLoad`                    the current file. Note that the plugin
+                                  already does this saves breakpoints with
+                                  every file save.
+
+----------------------------------------------------------------------
 Functions:
 
 The following functions are available from vim-breakpoint.
+They shouldn't be needed during normal usage, but they are here if
+need arises.
 
 `breakpoint#place([line])          ` Places a breakpoint, ether at the
                                    current line, or at the line given
@@ -87,13 +105,28 @@ Example: >
 Where the ctermfg=Yellow can be changed for a different color, and the text=<>
 can be changed for a different symbol. See |:sign| for more information.
 =============================================================================
-5: Contributing                                             *BreakpointContrib*
+5: Troubleshooting                                          *BreakpointTrouble*
+
+Vim lacks any systems for handling signs between multiple plugins (please
+prove me wrong on this). Therefore this plugin has set a prefix of 2000 on all
+its signs. If this conflicts with another plugin for you change the prefix: >
+    let g:breakpoint#counterOffset = X
+<
+=============================================================================
+6: Known Bugs                                                   *BreakpointBug*
+
+Breakpoints remain even if the line they reside on is deleted. They are then
+automatically moved to an adjacent line. The plugin however doesn't realize
+this, which makes it behave as it's still on the line with the line number
+of the initial placement of the breakpoint.
+=============================================================================
+7: Contributing                                             *BreakpointContrib*
 
 Github pull requests at https://github.com/HugoNikanor/vim-breakpoint, which
 is also where you should have downloaded this plugin from.
 
 =============================================================================
-6: Credits & Licence                                        *BreakpointCredits*
+9: Credits & Licence                                        *BreakpointCredits*
 
 Author and maintainer:
     Hugo Hörnquist (hugo @ hornquist.se) (GitHub: HugoNikanor)

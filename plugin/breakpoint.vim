@@ -4,8 +4,8 @@ sign define breakpoint text=* texthl=Breakpoint
 
 " This is so my sign numbering (hopefully) doesn't collide
 " with some other plugin
-let s:counterOffset = 2000
-let g:counter = s:counterOffset + 1
+let g:breakpoint#counterOffset = 2000
+let s:counter = g:breakpoint#counterOffset + 1
 
 let g:breakpoints = []
 
@@ -39,12 +39,12 @@ function! breakpoint#place(...)
 	endfor
 
 	execute printf(":sign place %d line=%d name=breakpoint file=%s",
-				\ g:counter,
+				\ s:counter,
 				\ l:lnum,
 				\ l:fname)
 
-	let g:breakpoints += [[l:lnum, g:counter, l:fname]]
-	let g:counter += 1
+	let g:breakpoints += [[l:lnum, s:counter, l:fname]]
+	let s:counter += 1
 	return 0
 endfunction
 
@@ -133,11 +133,10 @@ endfunction
 
 " TODO is this the best autocmd patters
 augroup breakpoint
+	autocmd!
 	autocmd BufNewFile,BufRead * :call breakpoint#load()
 	autocmd BufWritePre,FileWritePre * :call breakpoint#save()
 augroup END
-
-nnoremap <leader>a :silent call breakpoint#toggle()<cr>
 
 command! -count -bar BreakpointPlace
 			\ call breakpoint#place(<count> ? <count> : line('.'))
@@ -147,3 +146,5 @@ command! -count -bar BreakpointToggle
 			\ call breakpoint#toggle(<count> ? <count> : line('.'))
 command! -bar BreakpointSave call breakpoint#save()
 command! -bar BreakpointLoad call breakpoint#load()
+
+nnoremap <leader>a :BreakpointToggle<cr>

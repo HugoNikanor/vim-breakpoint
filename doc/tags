@@ -1,9 +1,11 @@
 Breakpoint	breakpoint.txt	/*Breakpoint*
+BreakpointBug	breakpoint.txt	/*BreakpointBug*
 BreakpointConfig	breakpoint.txt	/*BreakpointConfig*
 BreakpointContents	breakpoint.txt	/*BreakpointContents*
 BreakpointContrib	breakpoint.txt	/*BreakpointContrib*
 BreakpointCredits	breakpoint.txt	/*BreakpointCredits*
 BreakpointGDB	breakpoint.txt	/*BreakpointGDB*
+BreakpointTrouble	breakpoint.txt	/*BreakpointTrouble*
 BreakpointVim	breakpoint.txt	/*BreakpointVim*
 breakpoint	breakpoint.txt	/*breakpoint*
 breakpoint.txt	breakpoint.txt	/*breakpoint.txt*
