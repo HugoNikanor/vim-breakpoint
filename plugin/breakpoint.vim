@@ -50,8 +50,14 @@ endfunction
 
 " Remove the breakpoint at the cursors current line
 " returns 1 if breakpoint was removed, 0 otherwise
-function! breakpoint#remove()
-	let l:lnum = line(".")
+" Takes one optional argument which is a line number, uses the
+" current line if no number is given
+function! breakpoint#remove(...)
+	let l:lnum = a:0 == 1 ? a:1 : line(".")
+	" can't place breakpoint outside file
+	if l:lnum > line("$") || l:lnum < 1
+		return 1
+	endif
 	let l:fname = expand("%:p")
 
 	" this is so we can delete the breakpoint from the list
@@ -72,9 +78,15 @@ function! breakpoint#remove()
 	return 0
 endfunction
 
-function! breakpoint#toggle()
-	if !breakpoint#remove()
-		call breakpoint#place()
+function! breakpoint#toggle(...)
+	if a:0 == 1
+		if !breakpoint#remove(a:1)
+			call breakpoint#place(a:1)
+		endif
+	else
+		if !breakpoint#remove()
+			call breakpoint#place()
+		endif
 	endif
 endfunction
 
@@ -126,3 +138,12 @@ augroup breakpoint
 augroup END
 
 nnoremap <leader>a :silent call breakpoint#toggle()<cr>
+
+command! -count -bar BreakpointPlace
+			\ call breakpoint#place(<count> ? <count> : line('.'))
+command! -count -bar BreakpointRemove
+			\ call breakpoint#remove(<count> ? <count> : line('.'))
+command! -count -bar BreakpointToggle
+			\ call breakpoint#toggle(<count> ? <count> : line('.'))
+command! -bar BreakpointSave call breakpoint#save()
+command! -bar BreakpointLoad call breakpoint#load()
