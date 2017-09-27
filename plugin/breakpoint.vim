@@ -1,3 +1,9 @@
+" re-sourcing guard
+if exists("g:loaded_breakpoint")
+	finish
+endif
+let g:loaded_breakpoint = 1
+
 highlight Breakpoint ctermfg=Red
 
 sign define breakpoint text=* texthl=Breakpoint
