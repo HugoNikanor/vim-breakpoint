@@ -11,19 +11,31 @@ Currently doesn't delete breakpoint even if line is deleted. This is
 however not a large problem, since it is still apparent where the
 breakpoints are.
 
+	  1 #include <stdio.h>
+	  2 #include <string.h>
+	  3 
+	  4 int main() {
+	  5     printf("%i\n", strcmp("Hello", "Hello"));
+	* 6     printf("%i\n", strcmp("hello", "Hello"));
+	  7     printf("%i\n", strcmp("Nothing", "Hello"));
+	  8 }
+*An "image" of vim with a breakpoint on line 6*
+
 Usage
 -----
 The breakpoints save to file whenever you save a file with breakpoints
 in it, and also automatically loads a breakpoint file if there is any.
 
+For full usage documentation see `:help breakpoint`
+
 ### Keybinds
 - `<leader>a` :: Toggle breakpoint
 
-### Functions
-- `breakpoint#place()`
-- `breakpoint#remove()`
-- `breakpoint#toggle()`
-- `breakpoint#save()`
-- `breakpoint#load()`
+### Commands
+- `BreakpointPlace [line]`
+- `BreakpointRemove [line]`
+- `BreakpointToggle [line]`
+- `BreakpointSave`
+- `BreakpointLoad`
 
 
