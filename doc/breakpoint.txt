@@ -48,9 +48,9 @@ Bindings:
 <leader>a                           toggles breakpoint on current line
 
 ----------------------------------------------------------------------
-Commands:
-
-The following commands are available:
+Commands:                           *BreakpointSave*    *BreakpointPlace*
+                                    *BreakpointLoad*    *BreakpointRemove*
+The following commands are available:                 *BreakpointToggle*
 
 `BreakpointPlace  [line]`           Place, remove, or toggle breakpoint.
 `BreakpointRemove [line]`           Either on {line} or on current line,
