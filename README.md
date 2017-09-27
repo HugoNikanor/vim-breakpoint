@@ -28,8 +28,10 @@ in it, and also automatically loads a breakpoint file if there is any.
 
 For full usage documentation see `:help breakpoint`
 
-### Keybinds
-- `<leader>a` :: Toggle breakpoint
+The plugin doesn't bind any keys by itself, so that's up to the user.
+I would recommend having the following in your vimrc after loading the plugin:
+
+    nmap <leader>a <Plug>BreakpointToggle
 
 ### Commands
 - `BreakpointPlace [line]`

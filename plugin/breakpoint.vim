@@ -153,4 +153,4 @@ command! -count -bar BreakpointToggle
 command! -bar BreakpointSave call breakpoint#save()
 command! -bar BreakpointLoad call breakpoint#load()
 
-nnoremap <leader>a :BreakpointToggle<cr>
+nnoremap <Plug>BreakpointToggle :BreakpointToggle<cr>

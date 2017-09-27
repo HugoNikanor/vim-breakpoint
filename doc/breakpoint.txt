@@ -45,7 +45,11 @@ Primary distribution and latest version of this plugin should be available at:
 
 Bindings:
 
-<leader>a                           toggles breakpoint on current line
+<Plug>BreakpointToggle              toggles breakpoint on current line
+
+I would also recommend the following mapping (or something similar to it): >
+	nmap <leader>a <Plug>BreakpointToggle
+<
 
 ----------------------------------------------------------------------
 Commands:                           *BreakpointSave*    *BreakpointPlace*
