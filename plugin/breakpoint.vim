@@ -39,7 +39,7 @@ function! breakpoint#place(...)
 	let l:signs = execute(printf("sign place file=%s", l:fname))
 	for line in split(l:signs, "\n")[2:]
 		let [line, id, name] = split(line, "  *")
-		if split(line, "=")[1] == l:lnum
+		if name == "name=breakpoint" && split(line, "=")[1] == l:lnum
 			return 2
 		endif
 	endfor
