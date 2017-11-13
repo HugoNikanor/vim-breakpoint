@@ -13,8 +13,6 @@ sign define breakpoint text=* texthl=Breakpoint
 let g:breakpoint#counterOffset = 2000
 let s:counter = g:breakpoint#counterOffset + 1
 
-let g:breakpoints = []
-
 " retuns a string containing the name of the breakpoint file
 " for the file currently selected
 function! s:breakpointFilename()
@@ -38,8 +36,10 @@ function! breakpoint#place(...)
 	let l:fname = expand("%:p")
 
 	" Make sure that no duplicate breakpoints exists in file
-	for [n, _, file] in g:breakpoints
-		if n == l:lnum && l:fname == file
+	let l:signs = execute(printf("sign place file=%s", l:fname))
+	for line in split(l:signs, "\n")[2:]
+		let [line, id, name] = split(line, "  *")
+		if split(line, "=")[1] == l:lnum
 			return 2
 		endif
 	endfor
@@ -49,7 +49,6 @@ function! breakpoint#place(...)
 				\ l:lnum,
 				\ l:fname)
 
-	let g:breakpoints += [[l:lnum, s:counter, l:fname]]
 	let s:counter += 1
 	return 0
 endfunction
@@ -66,21 +65,24 @@ function! breakpoint#remove(...)
 	endif
 	let l:fname = expand("%:p")
 
-	" this is so we can delete the breakpoint from the list
-	let l:index = 0
+	let l:signs = execute(printf("sign place file=%s", l:fname))
 
-	for [n, cpos, file] in g:breakpoints
-		let [n, cpos, file] = g:breakpoints[l:index]
-		if l:lnum == n && l:fname == file
+	for line in split(l:signs, "\n")[2:]
+		let [line, id, name] = split(line, "  *")
+		if (name != "name=breakpoint")
+			continue
+		endif
+
+		let l:cline = split(line, "=")[1]
+		if (l:cline == l:lnum)
 			execute printf(":sign unplace %d file=%s",
-						\ cpos,
+						\ split(id, "=")[1],
 						\ l:fname)
-			unlet g:breakpoints[l:index]
-			"break
 			return 1
 		endif
-		let l:index += 1
+
 	endfor
+
 	return 0
 endfunction
 
@@ -104,13 +106,22 @@ endfunction
 function! breakpoint#save()
 	let l:fname = expand("%:p")
 	let l:lines = []
-	for [line, _, file] in g:breakpoints
-		if l:fname == file
-			let l:lines += [printf("break %s:%d", l:fname, line)]
+	let l:signs = execute(printf("sign place file=%s", l:fname))
+
+	for line in split(l:signs, "\n")[2:]
+		let [line, id, name] = split(line, "  *")
+
+		if (name != "name=breakpoint")
+			continue
 		endif
+
+		let l:lines += [printf("break %s:%d",
+					\ l:fname,
+					\ split(line, "=")[1])]
+
 	endfor
 
-	if (empty(l:lines))
+	if empty(l:lines)
 		call delete(s:breakpointFilename())
 	else
 		call writefile(l:lines, s:breakpointFilename())
