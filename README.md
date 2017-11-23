@@ -21,6 +21,20 @@ breakpoints are.
 	  8 }
 *An "image" of vim with a breakpoint on line 6*
 
+Installation
+------------
+Since a few versions back this plugin requires Vim 8.
+The old version which still works with Vim 7 is available
+under the tag `v7`.
+
+If using [vim-plugged][1] then the following can be put in
+your `vimrc` to automatically get the correct version:
+
+	if version >= 800 |Plug 'HugoNikanor/vim-breakpoint'
+	else              |Plug 'HugoNikanor/vim-breakpoint', {'tag': 'v7'}
+
+[1]: https://github.com/junegunn/vim-plug
+
 Usage
 -----
 The breakpoints save to file whenever you save a file with breakpoints
