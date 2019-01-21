@@ -37,8 +37,8 @@ function! breakpoint#place(...)
 
 	" Make sure that no duplicate breakpoints exists in file
 	let l:signs = execute(printf("sign place file=%s", l:fname))
-	for line in split(l:signs, "\n")[2:]
-		let [line, id, name] = split(line, "  *")
+	for line in split(l:signs, "\n")[3:]
+		let [line, id, name, prio] = split(line, "  *")
 		if name == "name=breakpoint" && split(line, "=")[1] == l:lnum
 			return 2
 		endif
@@ -68,7 +68,7 @@ function! breakpoint#remove(...)
 	let l:signs = execute(printf("sign place file=%s", l:fname))
 
 	for line in split(l:signs, "\n")[2:]
-		let [line, id, name] = split(line, "  *")
+		let [line, id, name, prio] = split(line, "  *")
 		if (name != "name=breakpoint")
 			continue
 		endif
@@ -108,8 +108,8 @@ function! breakpoint#save()
 	let l:lines = []
 	let l:signs = execute(printf("sign place file=%s", l:fname))
 
-	for line in split(l:signs, "\n")[2:]
-		let [line, id, name] = split(line, "  *")
+	for line in split(l:signs, "\n")[3:]
+		let [line, id, name, prio] = split(line, "  *")
 
 		if (name != "name=breakpoint")
 			continue
