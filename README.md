@@ -10,7 +10,7 @@ Vim 8.1 changed the output of sign listings, v8.1 solves this program.
 
 Vim breakpoint is a plugin for easily placing breakpoints from inside Vim.
 
-It saves and reads breakpoints from `$FILEPATH/.breakpoints_$FILENAME`.
+It saves and reads breakpoints from `$FILEPATH/.$FILENAME_breakpoints`.
 
 Currently it only supports GDB style breakpoints, but this could easily be
 extended if I could be bothered.

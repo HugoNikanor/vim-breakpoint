@@ -1,4 +1,4 @@
-*breakpoint.txt*                                        Last change: 2017-09-25
+*breakpoint.txt*                                        Last change: 2022-10-31
 *breakpoint*
 
               _                    _                _       _   ~
@@ -28,7 +28,7 @@ CONTENTS                                                   *BreakpointContents*
 This plugin allows you to place breakpoints in Vim. These can later be
 sourced by GDB.
 
-If there exists a file named `.breakpoints_<filename>` in the same directory
+If there exists a file named `.<filename>_breakpoints` in the same directory
 as <file> then Vim loads breakpoint data from that file. If any breakpoints
 are set when Vim saves then those are saved to that file. If there are no
 breakpoints in the file during a save then the breakpoints file is removed.

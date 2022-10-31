@@ -18,7 +18,7 @@ let s:counter = g:breakpoint#counterOffset + 1
 function! s:breakpointFilename()
 	let l:dirname = expand("%:h")
 	let l:filename = expand("%:t")
-	return l:dirname . "/.breakpoints_" . l:filename
+	return l:dirname . "/." . l:filename . "_breakpoints"
 endfunction
 
 
